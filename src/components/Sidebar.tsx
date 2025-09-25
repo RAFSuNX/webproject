@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Plus, MessageSquare, Trash2, Menu, X, Sun, Moon } from 'lucide-react';
 import { ChatSession } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -30,7 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={onToggle}
         />
       )}
@@ -41,32 +40,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:relative lg:z-auto
       `}>
-        <div className="h-full bg-white/10 dark:bg-gray-900/10 backdrop-blur-xl border-r border-white/20 dark:border-gray-700/30 flex flex-col">
+        <div className="h-full bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 flex flex-col">
           {/* Header */}
-          <div className="p-4 border-b border-white/10 dark:border-gray-700/20">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-800">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-accent flex items-center justify-center">
                   <span className="text-white font-bold text-sm">iY</span>
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold text-accent">
                   INFOiYo
                 </h1>
               </div>
               <button
                 onClick={onToggle}
-                className="lg:hidden p-2 rounded-lg hover:bg-white/10 dark:hover:bg-gray-700/20 transition-colors"
+                className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
               >
-                <X size={20} className="text-gray-600 dark:text-gray-300" />
+                <span className="text-gray-600 dark:text-gray-300 font-bold">✕</span>
               </button>
             </div>
             
             <button
               onClick={onNewChat}
-              className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 border border-blue-500/30 transition-all duration-200 group"
+              className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-100 dark:bg-gray-900 hover:bg-accent hover:text-white border border-gray-300 dark:border-gray-700 transition-all duration-200 group"
             >
-              <Plus size={18} className="text-blue-400 group-hover:text-blue-300" />
-              <span className="text-gray-700 dark:text-gray-200 font-medium">New Chat</span>
+              <span className="text-accent group-hover:text-white font-bold">+</span>
+              <span className="text-gray-700 dark:text-gray-200 group-hover:text-white font-medium">New Chat</span>
             </button>
           </div>
 
@@ -76,22 +75,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div
                 key={session.id}
                 className={`
-                  group relative flex items-center space-x-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200
+                  group relative flex items-center space-x-3 px-3 py-3 cursor-pointer transition-all duration-200
                   ${currentSessionId === session.id 
-                    ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30' 
-                    : 'hover:bg-white/10 dark:hover:bg-gray-700/20'
+                    ? 'bg-accent text-white' 
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-900'
                   }
                 `}
                 onClick={() => onSelectSession(session.id)}
                 onMouseEnter={() => setHoveredSession(session.id)}
                 onMouseLeave={() => setHoveredSession(null)}
               >
-                <MessageSquare size={16} className="text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                <span className={`flex-shrink-0 text-sm ${currentSessionId === session.id ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}>💬</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-700 dark:text-gray-200 truncate">
+                  <p className={`text-sm truncate ${currentSessionId === session.id ? 'text-white' : 'text-gray-700 dark:text-gray-200'}`}>
                     {session.title}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className={`text-xs ${currentSessionId === session.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
                     {session.messages.length} messages
                   </p>
                 </div>
@@ -101,9 +100,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       e.stopPropagation();
                       onDeleteSession(session.id);
                     }}
-                    className="p-1 rounded-md hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
+                    className="p-1 hover:bg-red-500 hover:text-white text-gray-400 transition-colors"
                   >
-                    <Trash2 size={14} />
+                    <span className="text-xs">🗑</span>
                   </button>
                 )}
               </div>
@@ -111,22 +110,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
             
             {sessions.length === 0 && (
               <div className="text-center py-8">
-                <MessageSquare size={32} className="mx-auto text-gray-400 dark:text-gray-500 mb-2" />
+                <span className="text-2xl text-gray-400 dark:text-gray-500 mb-2 block">💬</span>
                 <p className="text-sm text-gray-500 dark:text-gray-400">No chat sessions yet</p>
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-white/10 dark:border-gray-700/20">
+          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
             <button
               onClick={toggleTheme}
-              className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 dark:hover:bg-gray-700/20 transition-colors"
+              className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
             >
               {theme === 'dark' ? (
-                <Sun size={18} className="text-yellow-400" />
+                <span className="text-accent">☀</span>
               ) : (
-                <Moon size={18} className="text-blue-400" />
+                <span className="text-accent">🌙</span>
               )}
               <span className="text-gray-700 dark:text-gray-200">
                 {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}

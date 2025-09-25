@@ -64,7 +64,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex">
+      <div className="min-h-screen bg-white dark:bg-black flex">
         <Sidebar
           sessions={sessions}
           currentSessionId={currentSessionId}
@@ -83,10 +83,10 @@ function App() {
               <div className="max-w-4xl mx-auto px-4 py-6">
                 {messages.length === 0 && (
                   <div className="text-center py-12">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-2xl">
+                    <div className="w-20 h-20 bg-accent mx-auto mb-6 flex items-center justify-center">
                       <span className="text-white font-bold text-2xl">iY</span>
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-4">Welcome to INFOiYo</h2>
+                    <h2 className="text-3xl font-bold text-black dark:text-white mb-4">Welcome to INFOiYo</h2>
                     <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto text-lg leading-relaxed">
                       Your intelligent AI assistant powered by OpenRouter. Ask me anything about coding, explanations, debugging, and more!
                     </p>

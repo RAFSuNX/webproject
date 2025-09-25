@@ -1,5 +1,4 @@
 import React from 'react';
-import { Menu } from 'lucide-react';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -7,27 +6,27 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   return (
-    <header className="bg-white/10 dark:bg-gray-900/10 backdrop-blur-xl border-b border-white/20 dark:border-gray-700/30 sticky top-0 z-30">
+    <header className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30">
       <div className="px-4 py-4">
         <div className="flex items-center justify-between">
           <button
             onClick={onToggleSidebar}
-            className="lg:hidden p-2 rounded-lg hover:bg-white/10 dark:hover:bg-gray-700/20 transition-colors"
+            className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
           >
-            <Menu size={20} className="text-gray-600 dark:text-gray-300" />
+            <span className="text-gray-600 dark:text-gray-300 font-bold">☰</span>
           </button>
           
           <div className="flex items-center space-x-3 lg:hidden">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-accent flex items-center justify-center">
               <span className="text-white font-bold text-sm">iY</span>
             </div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-lg font-bold text-accent">
               INFOiYo
             </h1>
           </div>
           
           <div className="hidden lg:block">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Powered by OpenRouter</p>
+            <p className="text-sm text-gray-500 dark:text-gray-500">Powered by OpenRouter</p>
           </div>
         </div>
       </div>
