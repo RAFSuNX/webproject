@@ -1,6 +1,49 @@
 import React from 'react';
 import { ChatMessage as ChatMessageType } from '../types';
 
+const CopyButton: React.FC<{ text: string }> = ({ text }) => {
+  const [copied, setCopied] = React.useState(false);
+  
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
+  };
+  
+  return (
+    <button
+      onClick={handleCopy}
+      className="absolute top-2 right-2 px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity"
+    >
+      {copied ? '✓ Copied' : '📋 Copy'}
+    </button>
+  );
+};
+
+const JsonViewer: React.FC<{ data: any }> = ({ data }) => {
+  const jsonString = JSON.stringify(data, null, 2);
+  
+  return (
+    <div className="relative group">
+      <div className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-3 my-2">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+            JSON Response
+          </span>
+        </div>
+        <pre className="bg-black text-green-400 p-3 rounded text-sm overflow-x-auto font-mono">
+          <code>{jsonString}</code>
+        </pre>
+        <CopyButton text={jsonString} />
+      </div>
+    </div>
+  );
+};
+
 const formatMessage = (content: string) => {
   // Split content by code blocks (looking for ```language or just ```)
   const parts = content.split(/(```[\s\S]*?```)/g);
@@ -8,11 +51,23 @@ const formatMessage = (content: string) => {
   return parts.map((part, index) => {
     if (part.startsWith('```')) {
       // Extract code content (remove ``` and language identifier)
-      const codeContent = part.replace(/^```[\w]*\n?/, '').replace(/```$/, '');
+      const lines = part.split('\n');
+      const firstLine = lines[0];
+      const language = firstLine.replace(/^```/, '').trim() || 'text';
+      const codeContent = lines.slice(1, -1).join('\n');
+      
       return (
-        <pre key={index} className="bg-black text-white p-4 my-3 overflow-x-auto">
-          <code className="text-sm font-mono">{codeContent}</code>
-        </pre>
+        <div key={index} className="relative group my-3">
+          <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-t border-b border-gray-300 dark:border-gray-600">
+            <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+              {language}
+            </span>
+          </div>
+          <pre className="bg-black text-white p-4 rounded-b overflow-x-auto">
+            <code className="text-sm font-mono">{codeContent}</code>
+          </pre>
+          <CopyButton text={codeContent} />
+        </div>
       );
     } else if (part.trim()) {
       // Regular text content
@@ -54,18 +109,39 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             <p className="text-sm">{message.content}</p>
           ) : (
             <div className="space-y-2">
+              {/* Error message */}
+              {message.error && (
+                <div className="bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded p-3 mb-3">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-red-600 dark:text-red-400">⚠️</span>
+                    <span className="text-red-800 dark:text-red-200 font-semibold">Error</span>
+                  </div>
+                  <p className="text-red-700 dark:text-red-300 mt-1 text-sm">{message.error}</p>
+                </div>
+              )}
+              
               {message.smallTalk && (
                 <p className="text-sm text-gray-600 dark:text-gray-400 italic">{message.smallTalk}</p>
               )}
+              
               {message.response && (
                 <div className="text-sm">
                   {formatMessage(message.response)}
                 </div>
               )}
+              
               {message.code && (
-                <pre className="bg-black text-white p-3 text-xs overflow-x-auto">
-                  <code>{message.code}</code>
-                </pre>
+                <div className="relative group">
+                  <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-t border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      Code
+                    </span>
+                  </div>
+                  <pre className="bg-black text-white p-3 rounded-b text-xs overflow-x-auto">
+                    <code>{message.code}</code>
+                  </pre>
+                  <CopyButton text={message.code} />
+                </div>
               )}
             </div>
           )}

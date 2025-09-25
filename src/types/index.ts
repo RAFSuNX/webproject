@@ -6,12 +6,16 @@ export interface ChatMessage {
   response?: string;
   smallTalk?: string;
   code?: string;
+  error?: string;
+  jsonData?: any;
 }
 
 export interface APIResponse {
   response: string;
   small_talk?: string;
   code?: string;
+  error?: string;
+  json_data?: any;
 }
 
 export interface ChatSession {

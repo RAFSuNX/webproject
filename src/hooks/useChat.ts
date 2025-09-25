@@ -50,24 +50,28 @@ export const useChat = ({ sessionId, onUpdateSession, initialMessages = [] }: Us
         response: apiResponse.response || '',
         smallTalk: apiResponse.small_talk || '',
         code: apiResponse.code || '',
+        error: apiResponse.error || '',
+        jsonData: apiResponse.json_data || null,
       };
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (err) {
-      setError('Failed to get response. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get response. Please try again.';
+      setError(errorMessage);
       console.error('Chat error:', err);
       
       // Add error message
-      const errorMessage: ChatMessage = {
+      const errorChatMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         content: '',
         isUser: false,
         timestamp: new Date(),
-        response: 'I apologize, but I encountered an error processing your request. Please try again.',
+        response: '',
         smallTalk: '',
+        error: errorMessage,
       };
       
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => [...prev, errorChatMessage]);
     } finally {
       setIsLoading(false);
     }
